@@ -19,7 +19,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { UserCircle } from "lucide-react";
+import { UserCircle, LogOut } from "lucide-react";
+import { getAuth, signOut } from "firebase/auth";
+import { app } from "@/lib/firebase";
+import { useRouter } from "next/navigation";
 
 const profileSchema = z.object({
   name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres."),
@@ -42,6 +45,9 @@ interface ProfileTabProps {
 
 export default function ProfileTab({ onProfileUpdate }: ProfileTabProps) {
   const { toast } = useToast();
+  const router = useRouter();
+  const auth = getAuth(app);
+
   const form = useForm<UserProfile>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
@@ -66,12 +72,32 @@ export default function ProfileTab({ onProfileUpdate }: ProfileTabProps) {
     });
   };
 
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      router.push("/login");
+    } catch (error) {
+      console.error("Erro ao fazer logout:", error);
+      toast({
+        title: "Erro!",
+        description: "Não foi possível fazer logout. Tente novamente.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <Card className="border-none shadow-none">
       <CardHeader>
-        <CardTitle className="text-2xl font-headline flex items-center gap-2">
-            <UserCircle className="text-primary"/> Perfil do Usuário
-        </CardTitle>
+        <div className="flex items-center justify-between">
+            <CardTitle className="text-2xl font-headline flex items-center gap-2">
+                <UserCircle className="text-primary"/> Perfil do Usuário
+            </CardTitle>
+            <Button variant="outline" onClick={handleLogout} className="flex items-center gap-2">
+                <LogOut size={16} />
+                Sair
+            </Button>
+        </div>
         <CardDescription>
           Insira seus dados para que a IA possa criar planos personalizados para você.
         </CardDescription>
@@ -164,79 +190,4 @@ export default function ProfileTab({ onProfileUpdate }: ProfileTabProps) {
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Selecione seu nível" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="iniciante">Iniciante</SelectItem>
-                        <SelectItem value="intermediario">Intermediário</SelectItem>
-                        <SelectItem value="avancado">Avançado</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-             <FormField
-                control={form.control}
-                name="goal"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Objetivo Principal</FormLabel>
-                    <FormControl>
-                      <Textarea placeholder="Ex: Perder peso, ganhar massa muscular, melhorar o condicionamento..." {...field} />
-                    </FormControl>
-                     <FormDescription>Seja o mais específico possível.</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="grid md:grid-cols-2 gap-8">
-                 <FormField
-                  control={form.control}
-                  name="weeklyAvailability"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Disponibilidade Semanal</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Ex: 3 vezes por semana, 1 hora por dia" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                 <FormField
-                  control={form.control}
-                  name="equipmentAvailable"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Equipamentos Disponíveis</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Ex: Halteres, barra, acesso a academia" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-               <FormField
-                  control={form.control}
-                  name="dietaryRestrictions"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Restrições Alimentares</FormLabel>
-                      <FormControl>
-                        <Textarea placeholder="Ex: Intolerância a lactose, vegetariano, alergia a nozes..." {...field} />
-                      </FormControl>
-                       <FormDescription>Deixe em branco se não houver.</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-            <Button type="submit" className="bg-accent text-accent-foreground hover:bg-accent/90">Salvar Perfil</Button>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
-  );
-}
+                        </T
