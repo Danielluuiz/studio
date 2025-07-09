@@ -190,4 +190,101 @@ export default function ProfileTab({ onProfileUpdate }: ProfileTabProps) {
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Selecione seu nível" />
-                        </T
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="iniciante">Iniciante</SelectItem>
+                        <SelectItem value="intermediario">Intermediário</SelectItem>
+                        <SelectItem value="avancado">Avançado</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="goal"
+                render={({ field }) => (
+                  <FormItem className="lg:col-span-3">
+                    <FormLabel>Objetivo</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Ex: Quero ganhar massa muscular e definir o abdômen."
+                        className="resize-none"
+                        {...field}
+                      />
+                    </FormControl>
+                     <FormDescription>
+                      Seja o mais detalhado possível no seu objetivo.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+                <FormField
+                control={form.control}
+                name="weeklyAvailability"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Disponibilidade Semanal</FormLabel>
+                     <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione os dias" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="1-2">1-2 dias</SelectItem>
+                        <SelectItem value="3-4">3-4 dias</SelectItem>
+                        <SelectItem value="5-6">5-6 dias</SelectItem>
+                        <SelectItem value="todos">Todos os dias</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+                <FormField
+                control={form.control}
+                name="equipmentAvailable"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Equipamentos Disponíveis</FormLabel>
+                     <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione os equipamentos" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="nenhum">Apenas peso corporal</SelectItem>
+                        <SelectItem value="basico">Halteres e Elásticos</SelectItem>
+                        <SelectItem value="completo">Academia Completa</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+                 <FormField
+                control={form.control}
+                name="dietaryRestrictions"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Restrições Alimentares</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Ex: Intolerância a lactose, alergia a glúten..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <Button type="submit" className="w-full">Salvar Perfil</Button>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
+  );
+}
