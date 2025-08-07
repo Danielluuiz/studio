@@ -9,7 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { UserCircle, LogOut } from "lucide-react";
-import { ProfileForm, type UserProfile } from "@/components/profile-form";
+import { ProfileForm } from "@/components/profile-form";
+import type { UserProfile } from "@/components/profile-form";
 import { useAuth } from "@/context/AuthContext";
 
 interface ProfileTabProps {
@@ -32,6 +33,9 @@ export default function ProfileTab({ onProfileUpdate }: ProfileTabProps) {
           const data = docSnap.data() as UserProfile;
           setInitialData(data);
           onProfileUpdate(data);
+        } else {
+          // Para usuários novos, inicializa com dados vazios
+          setInitialData({});
         }
       };
       fetchProfile();
@@ -86,14 +90,14 @@ export default function ProfileTab({ onProfileUpdate }: ProfileTabProps) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {initialData ? (
+        {initialData !== undefined ? (
              <ProfileForm 
                 onSubmit={handleSubmit}
                 defaultValues={initialData}
-                submitButtonText="Atualizar Perfil"
+                submitButtonText={Object.keys(initialData).length > 0 ? "Atualizar Perfil" : "Criar Perfil"}
             />
         ) : (
-            <p>Carregando perfil...</p> // or a skeleton loader
+            <p>Carregando perfil...</p>
         )}
       </CardContent>
     </Card>

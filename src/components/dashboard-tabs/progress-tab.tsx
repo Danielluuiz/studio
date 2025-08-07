@@ -10,7 +10,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LineChart as LucideLineChart, Lightbulb } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
-import type { UserProfile } from "./profile-tab";
+import type { UserProfile } from "@/components/profile-form";
 
 interface ProgressTabProps {
   userProfile: UserProfile | null;

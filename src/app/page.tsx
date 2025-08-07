@@ -13,7 +13,8 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Dumbbell, User, Apple, LineChart as LucideLineChart, Bot } from "lucide-react";
-import ProfileTab, { type UserProfile } from "@/components/dashboard-tabs/profile-tab";
+import ProfileTab from "@/components/dashboard-tabs/profile-tab";
+import type { UserProfile } from "@/components/profile-form";
 import WorkoutTab from "@/components/dashboard-tabs/workout-tab";
 import MealTab from "@/components/dashboard-tabs/meal-tab";
 import ProgressTab from "@/components/dashboard-tabs/progress-tab";

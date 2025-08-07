@@ -7,7 +7,7 @@ import { generateWorkoutPlan } from "@/ai/flows/generate-workout-plan";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dumbbell, Zap } from "lucide-react";
-import type { UserProfile } from "./profile-tab";
+import type { UserProfile } from "@/components/profile-form";
 
 interface WorkoutTabProps {
   userProfile: UserProfile | null;

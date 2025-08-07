@@ -172,20 +172,204 @@ export default function SignUpPage() {
                 <form onSubmit={form.handleSubmit(handleEmailSignUp)} className="space-y-8">
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {/* Auth Fields */}
-                    <FormField control={form.control} name="name" render={({ field }) => ( <FormItem> <FormLabel>Nome</FormLabel> <FormControl> <Input placeholder="Seu nome" {...field} /> </FormControl> <FormMessage /> </FormItem> )}/>
-                    <FormField control={form.control} name="email" render={({ field }) => ( <FormItem> <FormLabel>Email</FormLabel> <FormControl> <Input type="email" placeholder="m@exemplo.com" {...field} /> </FormControl> <FormMessage /> </FormItem> )}/>
-                    <FormField control={form.control} name="password" render={({ field }) => ( <FormItem> <FormLabel>Senha</FormLabel> <FormControl> <Input type="password" placeholder="Sua senha" {...field} /> </FormControl> <FormMessage /> </FormItem> )}/>
+                    <FormField 
+                      control={form.control} 
+                      name="name" 
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Nome</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Seu nome" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField 
+                      control={form.control} 
+                      name="email" 
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input type="email" placeholder="m@exemplo.com" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField 
+                      control={form.control} 
+                      name="password" 
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Senha</FormLabel>
+                          <FormControl>
+                            <Input type="password" placeholder="Sua senha" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                     
                     {/* Profile Fields */}
-                    <FormField control={form.control} name="age" render={({ field }) => ( <FormItem> <FormLabel>Idade</FormLabel> <FormControl> <Input type="number" placeholder="Sua idade" {...field} /> </FormControl> <FormMessage /> </FormItem> )}/>
-                    <FormField control={form.control} name="weight" render={({ field }) => ( <FormItem> <FormLabel>Peso (kg)</FormLabel> <FormControl> <Input type="number" placeholder="Seu peso" {...field} /> </FormControl> <FormMessage /> </FormItem> )}/>
-                    <FormField control={form.control} name="height" render={({ field }) => ( <FormItem> <FormLabel>Altura (cm)</FormLabel> <FormControl> <Input type="number" placeholder="Sua altura" {...field} /> </FormControl> <FormMessage /> </FormItem> )}/>
-                    <FormField control={form.control} name="gender" render={({ field }) => ( <FormItem> <FormLabel>Gênero</FormLabel> <Select onValueChange={field.onChange} defaultValue={field.value}> <FormControl> <SelectTrigger> <SelectValue placeholder="Selecione seu gênero" /> </SelectTrigger> </FormControl> <SelectContent> <SelectItem value="masculino">Masculino</SelectItem> <SelectItem value="feminino">Feminino</SelectItem> <SelectItem value="outro">Outro</SelectItem> </SelectContent> </Select> <FormMessage /> </FormItem> )}/>
-                    <FormField control={form.control} name="experienceLevel" render={({ field }) => ( <FormItem> <FormLabel>Nível de Experiência</FormLabel> <Select onValueChange={field.onChange} defaultValue={field.value}> <FormControl> <SelectTrigger> <SelectValue placeholder="Selecione seu nível" /> </SelectTrigger> </FormControl> <SelectContent> <SelectItem value="iniciante">Iniciante</SelectItem> <SelectItem value="intermediario">Intermediário</SelectItem> <SelectItem value="avancado">Avançado</SelectItem> </SelectContent> </Select> <FormMessage /> </FormItem> )}/>
-                    <FormField control={form.control} name="weeklyAvailability" render={({ field }) => ( <FormItem> <FormLabel>Disponibilidade Semanal</FormLabel> <Select onValueChange={field.onChange} defaultValue={field.value}> <FormControl> <SelectTrigger> <SelectValue placeholder="Selecione os dias" /> </SelectTrigger> </FormControl> <SelectContent> <SelectItem value="1-2">1-2 dias</SelectItem> <SelectItem value="3-4">3-4 dias</SelectItem> <SelectItem value="5-6">5-6 dias</SelectItem> <SelectItem value="todos">Todos os dias</SelectItem> </SelectContent> </Select> <FormMessage /> </FormItem> )}/>
-                    <FormField control={form.control} name="equipmentAvailable" render={({ field }) => ( <FormItem> <FormLabel>Equipamentos Disponíveis</FormLabel> <Select onValueChange={field.onChange} defaultValue={field.value}> <FormControl> <SelectTrigger> <SelectValue placeholder="Selecione os equipamentos" /> </SelectTrigger> </FormControl> <SelectContent> <SelectItem value="nenhum">Apenas peso corporal</SelectItem> <SelectItem value="basico">Halteres e Elásticos</SelectItem> <SelectItem value="completo">Academia Completa</SelectItem> </SelectContent> </Select> <FormMessage /> </FormItem> )}/>
-                    <FormField control={form.control} name="dietaryRestrictions" render={({ field }) => ( <FormItem> <FormLabel>Restrições Alimentares</FormLabel> <FormControl> <Input placeholder="Ex: Intolerância a lactose, alergia a glúten..." {...field} /> </FormControl> <FormMessage /> </FormItem> )}/>
-                    <FormField control={form.control} name="goal" render={({ field }) => ( <FormItem className="lg:col-span-3"> <FormLabel>Objetivo</FormLabel> <FormControl> <Textarea placeholder="Ex: Quero ganhar massa muscular e definir o abdômen." className="resize-none" {...field} /> </FormControl> <FormDescription> Seja o mais detalhado possível no seu objetivo. </FormDescription> <FormMessage /> </FormItem> )}/>
+                    <FormField 
+                      control={form.control} 
+                      name="age" 
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Idade</FormLabel>
+                          <FormControl>
+                            <Input type="number" placeholder="Sua idade" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField 
+                      control={form.control} 
+                      name="weight" 
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Peso (kg)</FormLabel>
+                          <FormControl>
+                            <Input type="number" placeholder="Seu peso" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField 
+                      control={form.control} 
+                      name="height" 
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Altura (cm)</FormLabel>
+                          <FormControl>
+                            <Input type="number" placeholder="Sua altura" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField 
+                      control={form.control} 
+                      name="gender" 
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Gênero</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Selecione seu gênero" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="masculino">Masculino</SelectItem>
+                              <SelectItem value="feminino">Feminino</SelectItem>
+                              <SelectItem value="outro">Outro</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField 
+                      control={form.control} 
+                      name="experienceLevel" 
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Nível de Experiência</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Selecione seu nível" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="iniciante">Iniciante</SelectItem>
+                              <SelectItem value="intermediario">Intermediário</SelectItem>
+                              <SelectItem value="avancado">Avançado</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField 
+                      control={form.control} 
+                      name="weeklyAvailability" 
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Disponibilidade Semanal</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Selecione os dias" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="1-2">1-2 dias</SelectItem>
+                              <SelectItem value="3-4">3-4 dias</SelectItem>
+                              <SelectItem value="5-6">5-6 dias</SelectItem>
+                              <SelectItem value="todos">Todos os dias</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField 
+                      control={form.control} 
+                      name="equipmentAvailable" 
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Equipamentos Disponíveis</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Selecione os equipamentos" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="nenhum">Apenas peso corporal</SelectItem>
+                              <SelectItem value="basico">Halteres e Elásticos</SelectItem>
+                              <SelectItem value="completo">Academia Completa</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField 
+                      control={form.control} 
+                      name="dietaryRestrictions" 
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Restrições Alimentares</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Ex: Intolerância a lactose, alergia a glúten..." {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField 
+                      control={form.control} 
+                      name="goal" 
+                      render={({ field }) => (
+                        <FormItem className="lg:col-span-3">
+                          <FormLabel>Objetivo</FormLabel>
+                          <FormControl>
+                            <Textarea placeholder="Ex: Quero ganhar massa muscular e definir o abdômen." className="resize-none" {...field} />
+                          </FormControl>
+                          <FormDescription>
+                            Seja o mais detalhado possível no seu objetivo.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                 </div>
                 {error && <p className="text-destructive text-sm text-center mt-4">{error}</p>}
                 <Button type="submit" disabled={isLoading} className="w-full">

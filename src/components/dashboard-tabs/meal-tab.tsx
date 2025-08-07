@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Apple, UtensilsCrossed, ShoppingCart } from "lucide-react";
-import type { UserProfile } from "./profile-tab";
+import type { UserProfile } from "@/components/profile-form";
 
 interface MealTabProps {
   userProfile: UserProfile | null;
@@ -40,7 +40,7 @@ export default function MealTab({ userProfile }: MealTabProps) {
     try {
       const result = await generateMealSuggestions({
         objective: userProfile.goal,
-        dietaryRestrictions: userProfile.dietaryRestrictions,
+        dietaryRestrictions: userProfile.dietaryRestrictions || "Nenhuma",
         preferences: "N/A", // Preferences not in form, can be added later
         weeklyAvailability: userProfile.weeklyAvailability,
       });
