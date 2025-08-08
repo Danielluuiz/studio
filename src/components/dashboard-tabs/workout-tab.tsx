@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { generateWorkoutPlan } from "@/ai/flows/generate-workout-plan";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dumbbell, Zap } from "lucide-react";
 import type { UserProfile } from "@/components/profile-form";
@@ -15,7 +16,12 @@ interface WorkoutTabProps {
 
 export default function WorkoutTab({ userProfile }: WorkoutTabProps) {
   const { toast } = useToast();
-  const [workoutPlan, setWorkoutPlan] = useState("");
+  const [workoutPlan, setWorkoutPlan] = useState<null | {
+    weeklySplit: string;
+    days: Record<string, string>;
+    warmupAndCooldown: string;
+    notesAndProgression: string;
+  }>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleGeneratePlan = async () => {
@@ -29,7 +35,7 @@ export default function WorkoutTab({ userProfile }: WorkoutTabProps) {
     }
 
     setIsLoading(true);
-    setWorkoutPlan("");
+    setWorkoutPlan(null);
     try {
       const result = await generateWorkoutPlan({
         goal: userProfile.goal,
@@ -37,7 +43,7 @@ export default function WorkoutTab({ userProfile }: WorkoutTabProps) {
         availableTime: userProfile.weeklyAvailability,
         equipmentAvailable: userProfile.equipmentAvailable,
       });
-      setWorkoutPlan(result.workoutPlan);
+      setWorkoutPlan(result as any);
       toast({
         title: "Plano de Treino Gerado!",
         description: "Seu plano de treino personalizado está pronto.",
@@ -95,9 +101,70 @@ export default function WorkoutTab({ userProfile }: WorkoutTabProps) {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="prose prose-sm max-w-none p-4 bg-secondary rounded-md">
-                <pre className="whitespace-pre-wrap font-sans text-sm">{workoutPlan}</pre>
-            </div>
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="split">
+                <AccordionTrigger className="text-lg font-medium">
+                  Divisão Semanal
+                </AccordionTrigger>
+                <AccordionContent>
+                  <pre className="whitespace-pre-wrap p-4 bg-secondary rounded-md font-sans text-sm">{workoutPlan.weeklySplit}</pre>
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="mon">
+                <AccordionTrigger className="text-lg font-medium">Segunda-feira</AccordionTrigger>
+                <AccordionContent>
+                  <pre className="whitespace-pre-wrap p-4 bg-secondary rounded-md font-sans text-sm">{workoutPlan.days.monday}</pre>
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="tue">
+                <AccordionTrigger className="text-lg font-medium">Terça-feira</AccordionTrigger>
+                <AccordionContent>
+                  <pre className="whitespace-pre-wrap p-4 bg-secondary rounded-md font-sans text-sm">{workoutPlan.days.tuesday}</pre>
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="wed">
+                <AccordionTrigger className="text-lg font-medium">Quarta-feira</AccordionTrigger>
+                <AccordionContent>
+                  <pre className="whitespace-pre-wrap p-4 bg-secondary rounded-md font-sans text-sm">{workoutPlan.days.wednesday}</pre>
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="thu">
+                <AccordionTrigger className="text-lg font-medium">Quinta-feira</AccordionTrigger>
+                <AccordionContent>
+                  <pre className="whitespace-pre-wrap p-4 bg-secondary rounded-md font-sans text-sm">{workoutPlan.days.thursday}</pre>
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="fri">
+                <AccordionTrigger className="text-lg font-medium">Sexta-feira</AccordionTrigger>
+                <AccordionContent>
+                  <pre className="whitespace-pre-wrap p-4 bg-secondary rounded-md font-sans text-sm">{workoutPlan.days.friday}</pre>
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="sat">
+                <AccordionTrigger className="text-lg font-medium">Sábado</AccordionTrigger>
+                <AccordionContent>
+                  <pre className="whitespace-pre-wrap p-4 bg-secondary rounded-md font-sans text-sm">{workoutPlan.days.saturday}</pre>
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="sun">
+                <AccordionTrigger className="text-lg font-medium">Domingo</AccordionTrigger>
+                <AccordionContent>
+                  <pre className="whitespace-pre-wrap p-4 bg-secondary rounded-md font-sans text-sm">{workoutPlan.days.sunday}</pre>
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="warmup">
+                <AccordionTrigger className="text-lg font-medium">Aquecimento e Recuperação</AccordionTrigger>
+                <AccordionContent>
+                  <pre className="whitespace-pre-wrap p-4 bg-secondary rounded-md font-sans text-sm">{workoutPlan.warmupAndCooldown}</pre>
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="notes">
+                <AccordionTrigger className="text-lg font-medium">Notas e Progressão</AccordionTrigger>
+                <AccordionContent>
+                  <pre className="whitespace-pre-wrap p-4 bg-secondary rounded-md font-sans text-sm">{workoutPlan.notesAndProgression}</pre>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </CardContent>
         </Card>
       )}

@@ -35,6 +35,21 @@ export default function ProfilePage() {
   const [profileLoading, setProfileLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const isProfileIncomplete = (p: Partial<UserProfile> | null): boolean => {
+    if (!p) return true;
+    const requiredStringFields = [
+      p.gender,
+      p.goal,
+      p.experienceLevel,
+      p.weeklyAvailability,
+      p.equipmentAvailable,
+    ];
+    const requiredNumberFields = [p.age, p.weight, p.height];
+    const hasEmptyString = requiredStringFields.some((v) => !v || String(v).trim().length === 0);
+    const hasMissingNumber = requiredNumberFields.some((v) => v === undefined || v === null || Number.isNaN(v));
+    return hasEmptyString || hasMissingNumber;
+  };
+
   useEffect(() => {
     // If auth is done loading and there's no user, redirect to login
     if (!loading && !user) {
@@ -51,7 +66,11 @@ export default function ProfilePage() {
           const docRef = doc(db, 'users', user.uid);
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
-            setProfile(docSnap.data() as UserProfile);
+            const data = docSnap.data() as UserProfile;
+            setProfile(data);
+            if (isProfileIncomplete(data)) {
+              setIsEditing(true);
+            }
           } else {
             // Handle case where user exists in Auth but not in Firestore
             console.log('No profile document found, creating one...');
@@ -61,6 +80,7 @@ export default function ProfilePage() {
             };
             await setDoc(docRef, defaultProfile);
             setProfile(defaultProfile);
+            setIsEditing(true);
           }
         } catch (error) {
           console.error('Error fetching profile:', error);

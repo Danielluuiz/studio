@@ -48,7 +48,7 @@ export default function LoginPage() {
         });
       }
 
-      router.push('/profile');
+      router.push('/');
     } catch (err: any) {
       setError(`Falha ao fazer login: ${err.message}`);
     }
@@ -69,7 +69,7 @@ export default function LoginPage() {
     setError(null);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      router.push('/profile');
+      router.push('/');
     } catch (err: any) {
       setError('Falha ao fazer login. Verifique seu e-mail e senha.');
     }

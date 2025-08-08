@@ -95,7 +95,7 @@ export default function SignUpPage() {
           createdAt: new Date(),
         });
       }
-      router.push('/profile');
+      router.push('/');
     } catch (err: any) {
       setError(`Falha ao cadastrar: ${err.message}`);
     } finally {
@@ -126,7 +126,7 @@ export default function SignUpPage() {
         title: "Bem-vindo!",
         description: "Sua conta foi criada com sucesso.",
       });
-      router.push('/profile');
+      router.push('/');
     } catch (err: any) {
       setError(err.message);
     } finally {
