@@ -41,18 +41,22 @@ const prompt = ai.definePrompt({
   name: 'generateMealSuggestionsPrompt',
   input: {schema: GenerateMealSuggestionsInputSchema},
   output: {schema: GenerateMealSuggestionsOutputSchema},
-  prompt: `You are a personal nutrition assistant.
+  prompt: `You are a bilingual (pt-BR) nutrition coach.
 
-Based on the user's input, generate a personalized weekly meal plan.
+Retorne um JSON ESTRITO que corresponda exatamente ao schema de saída e escreva TODO o conteúdo em Português (Brasil).
 
-Consider the user's objective, dietary restrictions, preferences, and weekly availability.
+Regras de formatação:
+- weeklyMealSuggestions: organize por dias da semana (Segunda a Domingo), cada dia com seções "Café da manhã", "Almoço", "Jantar" e "Lanches". Use listas com bullet points; inclua porções aproximadas e breve modo de preparo quando útil.
+- macronutrientDistribution: traga um resumo diário com kcal aproximadas e distribuição de macronutrientes (proteínas, carboidratos, gorduras) e observações rápidas.
+- shoppingList: liste itens agrupados por categorias (Proteínas, Carboidratos, Hortifruti, Laticínios, Outros), um item por linha.
 
-Objective: {{{objective}}}
-Dietary Restrictions: {{{dietaryRestrictions}}}
-Preferences: {{{preferences}}}
-Weekly Availability: {{{weeklyAvailability}}}
+Contexto do usuário:
+- Objetivo: {{{objective}}}
+- Restrições alimentares: {{{dietaryRestrictions}}}
+- Preferências: {{{preferences}}}
+- Disponibilidade semanal: {{{weeklyAvailability}}}
 
-Generate a detailed weekly meal plan with specific recipes and instructions, including the macronutrient distribution for each meal and a shopping list.`,
+Produza textos curtos, claros e práticos, sempre em pt-BR.`,
 });
 
 const generateMealSuggestionsFlow = ai.defineFlow(
