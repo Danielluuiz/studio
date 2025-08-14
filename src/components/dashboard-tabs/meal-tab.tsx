@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { generateMealSuggestions } from "@/ai/flows/generate-meal-suggestions";
@@ -9,6 +9,9 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Skeleton } from "@/components/ui/skeleton";
 import { Apple, UtensilsCrossed, ShoppingCart } from "lucide-react";
 import type { UserProfile } from "@/components/profile-form";
+import { useAuth } from "@/context/AuthContext";
+import { db } from "@/lib/firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 interface MealTabProps {
   userProfile: UserProfile | null;
@@ -24,6 +27,34 @@ export default function MealTab({ userProfile }: MealTabProps) {
   const { toast } = useToast();
   const [mealPlan, setMealPlan] = useState<MealPlan | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (!user) return;
+
+    if (typeof window !== "undefined") {
+      const cached = sessionStorage.getItem(`mealPlan:${user.uid}`);
+      if (cached) {
+        try { setMealPlan(JSON.parse(cached)); } catch {}
+      }
+    }
+
+    (async () => {
+      try {
+        const ref = doc(db, "users", user.uid, "plans", "meal");
+        const snap = await getDoc(ref);
+        if (snap.exists()) {
+          const data = snap.data() as MealPlan;
+          setMealPlan(data);
+          if (typeof window !== "undefined") {
+            sessionStorage.setItem(`mealPlan:${user.uid}`, JSON.stringify(data));
+          }
+        }
+      } catch (e) {
+        console.warn("Falha ao carregar plano alimentar:", e);
+      }
+    })();
+  }, [user]);
 
   const handleGeneratePlan = async () => {
     if (!userProfile) {
@@ -45,6 +76,16 @@ export default function MealTab({ userProfile }: MealTabProps) {
         weeklyAvailability: userProfile.weeklyAvailability,
       });
       setMealPlan(result);
+      if (typeof window !== "undefined" && user) {
+        sessionStorage.setItem(`mealPlan:${user.uid}`, JSON.stringify(result));
+      }
+      if (user) {
+        try {
+          await setDoc(doc(db, "users", user.uid, "plans", "meal"), result as any);
+        } catch (e) {
+          console.warn("Falha ao salvar plano alimentar:", e);
+        }
+      }
       toast({
         title: "Plano Alimentar Gerado!",
         description: "Suas sugestões de refeições estão prontas.",

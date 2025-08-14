@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { generateWorkoutPlan } from "@/ai/flows/generate-workout-plan";
@@ -9,6 +9,9 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dumbbell, Zap } from "lucide-react";
 import type { UserProfile } from "@/components/profile-form";
+import { useAuth } from "@/context/AuthContext";
+import { db } from "@/lib/firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 interface WorkoutTabProps {
   userProfile: UserProfile | null;
@@ -23,6 +26,34 @@ export default function WorkoutTab({ userProfile }: WorkoutTabProps) {
     notesAndProgression: string;
   }>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (!user) return;
+    if (typeof window !== "undefined") {
+      const cached = sessionStorage.getItem(`workoutPlan:${user.uid}`);
+      if (cached) {
+        try {
+          setWorkoutPlan(JSON.parse(cached));
+        } catch {}
+      }
+    }
+    (async () => {
+      try {
+        const ref = doc(db, "users", user.uid, "plans", "workout");
+        const snap = await getDoc(ref);
+        if (snap.exists()) {
+          const data = snap.data() as any;
+          setWorkoutPlan(data);
+          if (typeof window !== "undefined") {
+            sessionStorage.setItem(`workoutPlan:${user.uid}`, JSON.stringify(data));
+          }
+        }
+      } catch (e) {
+        console.warn("Falha ao carregar plano de treino:", e);
+      }
+    })();
+  }, [user]);
 
   const handleGeneratePlan = async () => {
     if (!userProfile) {
@@ -44,6 +75,16 @@ export default function WorkoutTab({ userProfile }: WorkoutTabProps) {
         equipmentAvailable: userProfile.equipmentAvailable,
       });
       setWorkoutPlan(result as any);
+      if (typeof window !== "undefined" && user) {
+        sessionStorage.setItem(`workoutPlan:${user.uid}`, JSON.stringify(result));
+      }
+      if (user) {
+        try {
+          await setDoc(doc(db, "users", user.uid, "plans", "workout"), result as any);
+        } catch (e) {
+          console.warn("Falha ao salvar plano de treino:", e);
+        }
+      }
       toast({
         title: "Plano de Treino Gerado!",
         description: "Seu plano de treino personalizado está pronto.",

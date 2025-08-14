@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   SidebarProvider,
   Sidebar,
@@ -19,12 +19,26 @@ import WorkoutTab from "@/components/dashboard-tabs/workout-tab";
 import MealTab from "@/components/dashboard-tabs/meal-tab";
 import ProgressTab from "@/components/dashboard-tabs/progress-tab";
 import AssistantTab from "@/components/dashboard-tabs/assistant-tab";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 type ActiveView = "profile" | "workout" | "meal" | "progress" | "assistant";
 
 function PageContent() {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [activeView, setActiveView] = useState<ActiveView>("profile");
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.replace("/login");
+    }
+  }, [loading, user, router]);
+
+  if (loading || !user) {
+    return null;
+  }
 
   const handleProfileUpdate = (profile: UserProfile) => {
     setUserProfile(profile);
