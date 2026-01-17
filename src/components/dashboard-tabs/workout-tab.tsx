@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dumbbell, Zap } from "lucide-react";
-import type { UserProfile } from "@/components/profile-form";
+import type { UserProfile } from "@/types";
 import { useAuth } from "@/context/AuthContext";
 import { db } from "@/lib/firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
@@ -24,6 +24,7 @@ export default function WorkoutTab({ userProfile }: WorkoutTabProps) {
     days: Record<string, string>;
     warmupAndCooldown: string;
     notesAndProgression: string;
+    createdAt?: string;
   }>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
@@ -35,7 +36,7 @@ export default function WorkoutTab({ userProfile }: WorkoutTabProps) {
       if (cached) {
         try {
           setWorkoutPlan(JSON.parse(cached));
-        } catch {}
+        } catch { }
       }
     }
     (async () => {
@@ -65,6 +66,23 @@ export default function WorkoutTab({ userProfile }: WorkoutTabProps) {
       return;
     }
 
+    // Check if plan already exists and is recent (Basic Plan Constraint)
+    if (workoutPlan?.createdAt) {
+      const planDate = new Date(workoutPlan.createdAt);
+      const now = new Date();
+      const diffTime = Math.abs(now.getTime() - planDate.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      if (diffDays < 30) {
+        toast({
+          title: "Limite do Plano Grátis",
+          description: `Você só pode gerar um novo plano a cada 30 dias. Próximo disponível em ${30 - diffDays} dias.`,
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
     setIsLoading(true);
     setWorkoutPlan(null);
     try {
@@ -74,13 +92,17 @@ export default function WorkoutTab({ userProfile }: WorkoutTabProps) {
         availableTime: userProfile.weeklyAvailability,
         equipmentAvailable: userProfile.equipmentAvailable,
       });
-      setWorkoutPlan(result as any);
+      const resultWithDate = {
+        ...result,
+        createdAt: new Date().toISOString()
+      };
+      setWorkoutPlan(resultWithDate as any);
       if (typeof window !== "undefined" && user) {
-        sessionStorage.setItem(`workoutPlan:${user.uid}`, JSON.stringify(result));
+        sessionStorage.setItem(`workoutPlan:${user.uid}`, JSON.stringify(resultWithDate));
       }
       if (user) {
         try {
-          await setDoc(doc(db, "users", user.uid, "plans", "workout"), result as any);
+          await setDoc(doc(db, "users", user.uid, "plans", "workout"), resultWithDate as any);
         } catch (e) {
           console.warn("Falha ao salvar plano de treino:", e);
         }
@@ -117,8 +139,8 @@ export default function WorkoutTab({ userProfile }: WorkoutTabProps) {
           <Button onClick={handleGeneratePlan} disabled={isLoading || !userProfile} className="bg-primary hover:bg-primary/90">
             {isLoading ? "Gerando Plano..." : "Gerar Plano de Treino"}
           </Button>
-           {!userProfile && (
-             <p className="text-sm text-destructive mt-2">Preencha seu perfil para habilitar a geração de plano.</p>
+          {!userProfile && (
+            <p className="text-sm text-destructive mt-2">Preencha seu perfil para habilitar a geração de plano.</p>
           )}
         </CardContent>
       </Card>
@@ -138,7 +160,7 @@ export default function WorkoutTab({ userProfile }: WorkoutTabProps) {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Zap className="text-primary"/> Seu Plano de Treino
+              <Zap className="text-primary" /> Seu Plano de Treino
             </CardTitle>
           </CardHeader>
           <CardContent>

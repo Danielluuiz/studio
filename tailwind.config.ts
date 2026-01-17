@@ -1,4 +1,4 @@
-import type {Config} from 'tailwindcss';
+import type { Config } from 'tailwindcss';
 
 export default {
   darkMode: ['class'],
@@ -17,14 +17,14 @@ export default {
     },
     extend: {
       fontFamily: {
-        body: ['Poppins', 'sans-serif'],
-        headline: ['Poppins', 'sans-serif'],
+        body: ['Inter', 'sans-serif'],
+        headline: ['Inter', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {
-        'dark-red': '#B71C1C',
-        'light-gray': '#BDBDBD',
-        'ice-white': '#FAFAFA',
+        'brand-red': '#E33E45',
+        'brand-grey': '#EAEAEA',
+        'brand-charcoal': '#333333',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
@@ -65,11 +65,16 @@ export default {
           '4': 'hsl(var(--chart-4))',
           '5': 'hsl(var(--chart-5))',
         },
+        glass: {
+          DEFAULT: 'rgba(255, 255, 255, 0.7)', // Lighter glass for the new look
+          dark: 'rgba(51, 51, 51, 0.7)', // Dark glass for dark mode
+          border: 'rgba(255, 255, 255, 0.5)',
+        }
       },
       borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
+        lg: '1rem', // More rounded as per iOS style
+        md: '0.75rem',
+        sm: '0.5rem',
       },
       keyframes: {
         'accordion-down': {
@@ -88,10 +93,25 @@ export default {
             height: '0',
           },
         },
+        'blob': {
+          '0%': {
+            transform: 'translate(0px, 0px) scale(1)',
+          },
+          '33%': {
+            transform: 'translate(30px, -50px) scale(1.1)',
+          },
+          '66%': {
+            transform: 'translate(-20px, 20px) scale(0.9)',
+          },
+          '100%': {
+            transform: 'translate(0px, 0px) scale(1)',
+          },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'blob': 'blob 7s infinite',
       },
     },
   },

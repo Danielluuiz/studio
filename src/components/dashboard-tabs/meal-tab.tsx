@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Apple, UtensilsCrossed, ShoppingCart } from "lucide-react";
-import type { UserProfile } from "@/components/profile-form";
+import type { UserProfile } from "@/types";
 import { useAuth } from "@/context/AuthContext";
 import { db } from "@/lib/firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
@@ -21,6 +21,7 @@ interface MealPlan {
   weeklyMealSuggestions: string;
   macronutrientDistribution: string;
   shoppingList: string;
+  createdAt?: string;
 }
 
 export default function MealTab({ userProfile }: MealTabProps) {
@@ -35,7 +36,7 @@ export default function MealTab({ userProfile }: MealTabProps) {
     if (typeof window !== "undefined") {
       const cached = sessionStorage.getItem(`mealPlan:${user.uid}`);
       if (cached) {
-        try { setMealPlan(JSON.parse(cached)); } catch {}
+        try { setMealPlan(JSON.parse(cached)); } catch { }
       }
     }
 
@@ -66,6 +67,23 @@ export default function MealTab({ userProfile }: MealTabProps) {
       return;
     }
 
+    // Check if plan already exists and is recent (Basic Plan Constraint)
+    if (mealPlan?.createdAt) {
+      const planDate = new Date(mealPlan.createdAt);
+      const now = new Date();
+      const diffTime = Math.abs(now.getTime() - planDate.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      if (diffDays < 30) {
+        toast({
+          title: "Limite do Plano Grátis",
+          description: `Você só pode gerar um novo plano a cada 30 dias. Próximo disponível em ${30 - diffDays} dias.`,
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
     setIsLoading(true);
     setMealPlan(null);
     try {
@@ -75,13 +93,17 @@ export default function MealTab({ userProfile }: MealTabProps) {
         preferences: "N/A", // Preferences not in form, can be added later
         weeklyAvailability: userProfile.weeklyAvailability,
       });
-      setMealPlan(result);
+      const resultWithDate = {
+        ...result,
+        createdAt: new Date().toISOString()
+      };
+      setMealPlan(resultWithDate);
       if (typeof window !== "undefined" && user) {
-        sessionStorage.setItem(`mealPlan:${user.uid}`, JSON.stringify(result));
+        sessionStorage.setItem(`mealPlan:${user.uid}`, JSON.stringify(resultWithDate));
       }
       if (user) {
         try {
-          await setDoc(doc(db, "users", user.uid, "plans", "meal"), result as any);
+          await setDoc(doc(db, "users", user.uid, "plans", "meal"), resultWithDate as any);
         } catch (e) {
           console.warn("Falha ao salvar plano alimentar:", e);
         }
@@ -119,7 +141,7 @@ export default function MealTab({ userProfile }: MealTabProps) {
             {isLoading ? "Gerando Plano..." : "Gerar Plano Alimentar"}
           </Button>
           {!userProfile && (
-             <p className="text-sm text-destructive mt-2">Preencha seu perfil para habilitar a geração de plano.</p>
+            <p className="text-sm text-destructive mt-2">Preencha seu perfil para habilitar a geração de plano.</p>
           )}
         </CardContent>
       </Card>

@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast";
 import { UserCircle, LogOut } from "lucide-react";
 import { ProfileForm } from "@/components/profile-form";
-import type { UserProfile } from "@/components/profile-form";
+import type { UserProfile } from "@/types";
 import { useAuth } from "@/context/AuthContext";
 
 interface ProfileTabProps {
@@ -44,8 +44,8 @@ export default function ProfileTab({ onProfileUpdate }: ProfileTabProps) {
 
   const handleSubmit = async (data: UserProfile) => {
     if (!user) {
-        toast({ title: "Erro", description: "Usuário não autenticado.", variant: "destructive" });
-        return;
+      toast({ title: "Erro", description: "Usuário não autenticado.", variant: "destructive" });
+      return;
     }
     try {
       await setDoc(doc(db, "users", user.uid), data, { merge: true });
@@ -55,7 +55,7 @@ export default function ProfileTab({ onProfileUpdate }: ProfileTabProps) {
         description: "Suas informações foram salvas com sucesso.",
       });
     } catch (error) {
-       toast({ title: "Erro", description: "Não foi possível salvar o perfil.", variant: "destructive" });
+      toast({ title: "Erro", description: "Não foi possível salvar o perfil.", variant: "destructive" });
     }
   };
 
@@ -74,16 +74,16 @@ export default function ProfileTab({ onProfileUpdate }: ProfileTabProps) {
   };
 
   return (
-    <Card className="border-none shadow-none">
+    <Card className="glass-card text-white border-0">
       <CardHeader>
         <div className="flex items-center justify-between">
-            <CardTitle className="text-2xl font-headline flex items-center gap-2">
-                <UserCircle className="text-primary"/> Perfil do Usuário
-            </CardTitle>
-            <Button variant="outline" onClick={handleLogout} className="flex items-center gap-2">
-                <LogOut size={16} />
-                Sair
-            </Button>
+          <CardTitle className="text-2xl font-headline flex items-center gap-2">
+            <UserCircle className="text-primary" /> Perfil do Usuário
+          </CardTitle>
+          <Button variant="outline" onClick={handleLogout} className="flex items-center gap-2">
+            <LogOut size={16} />
+            Sair
+          </Button>
         </div>
         <CardDescription>
           Mantenha seus dados atualizados para que a IA possa criar os melhores planos para você.
@@ -91,13 +91,13 @@ export default function ProfileTab({ onProfileUpdate }: ProfileTabProps) {
       </CardHeader>
       <CardContent>
         {initialData !== undefined ? (
-             <ProfileForm 
-                onSubmit={handleSubmit}
-                defaultValues={initialData}
-                submitButtonText={Object.keys(initialData).length > 0 ? "Atualizar Perfil" : "Criar Perfil"}
-            />
+          <ProfileForm
+            onSubmit={handleSubmit}
+            defaultValues={initialData}
+            submitButtonText={Object.keys(initialData).length > 0 ? "Atualizar Perfil" : "Criar Perfil"}
+          />
         ) : (
-            <p>Carregando perfil...</p>
+          <p>Carregando perfil...</p>
         )}
       </CardContent>
     </Card>

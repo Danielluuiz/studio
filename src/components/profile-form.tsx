@@ -18,20 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
-export const profileSchema = z.object({
-  name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres."),
-  age: z.coerce.number().min(1, "Idade é obrigatória."),
-  weight: z.coerce.number().min(1, "Peso é obrigatório."),
-  height: z.coerce.number().min(1, "Altura é obrigatória."),
-  gender: z.string().min(1, "Gênero é obrigatório."),
-  goal: z.string().min(10, "Objetivo deve ter pelo menos 10 caracteres."),
-  experienceLevel: z.string().min(1, "Nível de experiência é obrigatório."),
-  dietaryRestrictions: z.string().optional(),
-  weeklyAvailability: z.string().min(1, "Disponibilidade é obrigatória."),
-  equipmentAvailable: z.string().min(1, "Equipamentos são obrigatórios."),
-});
-
-export type UserProfile = z.infer<typeof profileSchema>;
+import { profileSchema, type UserProfile } from "@/types";
 
 interface ProfileFormProps {
   onSubmit: SubmitHandler<UserProfile>;
@@ -39,8 +26,8 @@ interface ProfileFormProps {
   submitButtonText?: string;
 }
 
-export function ProfileForm({ 
-  onSubmit, 
+export function ProfileForm({
+  onSubmit,
   defaultValues,
   submitButtonText = "Salvar Perfil"
 }: ProfileFormProps) {
@@ -72,7 +59,7 @@ export function ProfileForm({
               <FormItem>
                 <FormLabel>Nome</FormLabel>
                 <FormControl>
-                  <Input placeholder="Seu nome" {...field} />
+                  <Input placeholder="Seu nome" {...field} className="glass-input" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -85,7 +72,7 @@ export function ProfileForm({
               <FormItem>
                 <FormLabel>Idade</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Sua idade" {...field} />
+                  <Input type="number" placeholder="Sua idade" {...field} className="glass-input" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -98,7 +85,7 @@ export function ProfileForm({
               <FormItem>
                 <FormLabel>Peso (kg)</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Seu peso" {...field} />
+                  <Input type="number" placeholder="Seu peso" {...field} className="glass-input" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -111,7 +98,7 @@ export function ProfileForm({
               <FormItem>
                 <FormLabel>Altura (cm)</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Sua altura" {...field} />
+                  <Input type="number" placeholder="Sua altura" {...field} className="glass-input" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -125,7 +112,7 @@ export function ProfileForm({
                 <FormLabel>Gênero</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className="glass-input">
                       <SelectValue placeholder="Selecione seu gênero" />
                     </SelectTrigger>
                   </FormControl>
@@ -147,7 +134,7 @@ export function ProfileForm({
                 <FormLabel>Nível de Experiência</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className="glass-input">
                       <SelectValue placeholder="Selecione seu nível" />
                     </SelectTrigger>
                   </FormControl>
@@ -170,7 +157,7 @@ export function ProfileForm({
                 <FormControl>
                   <Textarea
                     placeholder="Ex: Quero ganhar massa muscular e definir o abdômen."
-                    className="resize-none"
+                    className="resize-none glass-input"
                     {...field}
                   />
                 </FormControl>
@@ -189,7 +176,7 @@ export function ProfileForm({
                 <FormLabel>Disponibilidade Semanal</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className="glass-input">
                       <SelectValue placeholder="Selecione os dias" />
                     </SelectTrigger>
                   </FormControl>
@@ -212,7 +199,7 @@ export function ProfileForm({
                 <FormLabel>Equipamentos Disponíveis</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className="glass-input">
                       <SelectValue placeholder="Selecione os equipamentos" />
                     </SelectTrigger>
                   </FormControl>
@@ -233,14 +220,14 @@ export function ProfileForm({
               <FormItem>
                 <FormLabel>Restrições Alimentares</FormLabel>
                 <FormControl>
-                  <Input placeholder="Ex: Intolerância a lactose, alergia a glúten..." {...field} />
+                  <Input placeholder="Ex: Intolerância a lactose, alergia a glúten..." {...field} className="glass-input" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
         </div>
-        <Button type="submit" className="w-full">{submitButtonText}</Button>
+        <Button type="submit" className="w-full liquid-button text-white font-semibold tracking-wide hover:scale-[1.02] transition-transform duration-200">{submitButtonText}</Button>
       </form>
     </Form>
   );
